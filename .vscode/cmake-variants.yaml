@@ -1,0 +1,61 @@
+board:
+  default: STM32F4DISCOVERY
+  choices:
+    discovery:
+      short: DISCOVERY
+      long: STM32F4DISCOVERY
+      settings:
+        BOARD: STM32F4DISCOVERY
+    discovery_fullram:
+      short: DISCOVERY FullRAM
+      long: STM32F4DISCOVERY (full RAM)
+      settings:
+        BOARD: STM32F4DISCOVERY-FULLRAM
+    l4r5zi:
+      short: L4R5ZI
+      long: NUCLEO-L4R5ZI
+      settings:
+        BOARD: NUCLEO-L4R5ZI
+    l4r5zi_fullram:
+      short: L4R5ZI FullRAM
+      long: NUCLEO-L4R5ZI (full RAM)
+      settings:
+        BOARD: NUCLEO-L4R5ZI-FULLRAM
+
+buildType:
+  default: Release
+  choices:
+    Debug:
+      short: Debug
+      long: Debug
+      settings:
+        CMAKE_BUILD_TYPE: Debug
+    RelWithDebInfo:
+      short: RelWithDebInfo
+      long: Release with debug info
+      settings:
+        CMAKE_BUILD_TYPE: RelWithDebInfo
+    Release:
+      short: Release
+      long: Release
+      settings:
+        CMAKE_BUILD_TYPE: Release
+    MinSizeRel:
+      short: MinSizeRel
+      long: Minimum size release
+      settings:
+        CMAKE_BUILD_TYPE: MinSizeRel
+
+compiler:
+  default: gcc
+  choices:
+    gcc:
+      short: gcc
+      long: gcc
+      settings:
+        CMAKE_TOOLCHAIN_FILE: cmake/arm-none-eabi-gcc-libopencm3.toolchain
+    clang:
+      short: clang
+      long: clang
+      settings:
+        CMAKE_TOOLCHAIN_FILE: cmake/clang-libopencm3.toolchain

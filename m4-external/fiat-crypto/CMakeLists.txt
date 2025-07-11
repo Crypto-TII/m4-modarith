@@ -1,0 +1,21 @@
+if(USE_EXTERNAL_FIAT)
+    add_library(bench_c25519_solinas STATIC bench_c25519_solinas.c curve25519_solinas.c)
+    add_library(bench_p448_solinas STATIC bench_p448_solinas.c p448_solinas.c)
+    add_library(bench_p448_mont STATIC bench_p448_mont.c p448_mont.c)
+    add_library(bench_MFP248_mont STATIC bench_MFP248_mont.c MFP248_mont.c)
+    add_library(bench_MFP376_mont STATIC bench_MFP376_mont.c MFP376_mont.c)
+    add_library(bench_MFP500_mont STATIC bench_MFP500_mont.c MFP500_mont.c)
+    add_library(bench_NIST256_mont STATIC bench_NIST256_mont.c NIST256_mont.c)
+    add_library(bench_PM266_solinas STATIC bench_PM266_solinas.c PM266_solinas.c)
+    add_library(bench_PM512_solinas STATIC bench_PM512_solinas.c PM512_solinas.c)
+    add_library(bench_PM512_mont STATIC bench_PM512_mont.c PM512_mont.c)
+    add_library(bench_NIST521_solinas STATIC bench_NIST521_solinas.c NIST521_solinas.c)
+    add_library(bench_SECP256K1_mont STATIC bench_SECP256K1_mont.c SECP256K1_mont.c)
+    add_library(external-fiat STATIC
+        bench_c25519_solinas bench_p448_solinas bench_p448_mont bench_MFP248_mont bench_MFP376_mont bench_MFP500_mont
+        bench_PM512_solinas bench_PM512_mont bench_NIST256_mont bench_NIST521_solinas bench_PM266_solinas
+        bench_SECP256K1_mont)
+    target_include_directories(external-fiat PRIVATE .)
+    target_compile_definitions(external-fiat PRIVATE EXTERNAL_FIAT)
+    target_link_libraries(external-fiat PRIVATE unity)
+endif()

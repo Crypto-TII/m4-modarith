@@ -1,0 +1,29 @@
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+
+if(APPLE)
+    set(path /Applications/LLVM-ET-Arm-19.1.5-Darwin-universal)
+else()
+    set(path /usr/local/bin/LLVM-ET-Arm-19.1.5-Linux-AArch64)
+endif()
+
+set(triple arm-none-eabi)
+set(toolchain clang-libopencm3)
+
+set(CMAKE_C_COMPILER ${path}/bin/clang)
+set(CMAKE_ASM_COMPILER ${path}/bin/clang)
+set(CMAKE_CXX_COMPILER ${path}/bin/clang++)
+set(CMAKE_AR ${path}/bin/llvm-ar)
+set(CMAKE_SIZE_UTIL ${path}/bin/llvm-size CACHE STRING "")
+
+set(CMAKE_CROSSCOMPILING_EMULATOR
+    qemu-system-arm -M olimex-stm32-h405 -semihosting -nographic -serial null -serial stdio -monitor null -kernel)
+
+set(FP_FLAGS     "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
+set(ARCH_FLAGS   "-mthumb --target=thumbv7m-unknown-none-eabi -march=armv7em -mcpu=cortex-m4 -fomit-frame-pointer ${FP_FLAGS}")
+
+
+set(CMAKE_EXE_LINKER_FLAGS_INIT "--static -Wl,--gc-sections ${ARCH_FLAGS} ${LDARCH_FLAGS} ")
+set(CMAKE_C_FLAGS_INIT "-fno-common -ffunction-sections -fdata-sections ${ARCH_FLAGS} -MD")
+set(CMAKE_ASM_FLAGS_INIT "-fno-common -ffunction-sections -fdata-sections ${ARCH_FLAGS} -MD")
+

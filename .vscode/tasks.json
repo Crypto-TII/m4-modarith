@@ -1,0 +1,175 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake build",
+            "type": "cmake",
+            "command": "build",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "OpenOCD (remote)",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/openocd.sh",
+            "args": [
+                "debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/scripts"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "cpp",
+                "pattern": {
+                    "regexp": "^\\s*(Warning|Error):\\s+(.*)$",
+                    "severity": 1,
+                    "message": 2
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Open On-Chip Debugger.*",
+                    "endsPattern": "Info : Listening on port 50000 for gdb connections"
+                }
+            }
+        },
+        {
+            "label": "Stop OpenOCD",
+            "type": "shell",
+            "command": "echo ${input:stopOpenOCD}",
+            "problemMatcher": [],
+            // "dependsOn": [
+            //     "Stop SWO parser"
+            // ]
+        },
+        {
+            "label": "SWO parser",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/swo_parser.py",
+            "args": [],
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "cpp",
+                "pattern": {
+                    "regexp": "^\\s*(Warning|Error):\\s+(.*)$",
+                    "severity": 1,
+                    "message": 2
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "SWO client successfully connected to OpenOCD on.*",
+                    "endsPattern": "SWO client successfully connected to OpenOCD on.*"
+                }
+            },
+            "presentation": {
+                "clear": true,
+                "close": false,
+                "focus": true,
+                "panel": "dedicated",
+                "reveal": "always",
+            },
+            "dependsOn": [
+                "OpenOCD (remote)"
+            ]
+        },
+        // {
+        //     "label": "Stop SWO parser",
+        //     "type": "shell",
+        //     "command": "echo ${input:stopSWO}",
+        //     "problemMatcher": []
+        // },
+        {
+            "label": "Upload benchmark firmware",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/upload.sh",
+            "args": [
+                "${workspaceFolder}/build/bench",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/scripts"
+            }
+        },
+        {
+            "label": "Upload test firmware",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/upload.sh",
+            "args": [
+                "${workspaceFolder}/build/run_tests",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/scripts"
+            }
+        },
+        {
+            "label": "Monitor SWO (MCU clock: fast)",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/monitor.sh",
+            "args": ["fast"],
+            "options": {
+                "cwd": "${workspaceFolder}/scripts"
+            }
+        },
+        {
+            "label": "Monitor SWO (MCU clock: benchmark)",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/monitor.sh",
+            "args": ["benchmark"],
+            "options": {
+                "cwd": "${workspaceFolder}/scripts"
+            }
+        },
+        {
+            "label": "Run benchmarks",
+            "type": "shell",
+            "command": "",
+            "args": [],
+            "dependsOn": [
+                "Upload benchmark firmware",
+                "Monitor SWO (MCU clock: benchmark)"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Run tests",
+            "type": "shell",
+            "command": "",
+            "args": [],
+            "dependsOn": [
+                "Upload test firmware",
+                "Monitor SWO (MCU clock: fast)"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Run all tests",
+            "command": "${command:testing.runAll}",
+            "dependsOn": [
+                "CMake build"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "stopOpenOCD",
+            "type": "command",
+            "command": "workbench.action.tasks.terminate",
+            "args": "OpenOCD (remote)"
+        },
+        // {
+        //     "id": "stopSWO",
+        //     "type": "command",
+        //     "command": "workbench.action.tasks.terminate",
+        //     "args": "SWO parser"
+        // },
+    ]
+}

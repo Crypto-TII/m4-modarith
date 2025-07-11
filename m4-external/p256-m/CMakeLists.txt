@@ -1,0 +1,5 @@
+if(USE_EXTERNAL_P256_M)
+    add_library(external-p256-m STATIC bench-p256-m.c p256-m.c)
+    target_include_directories(external-p256-m PRIVATE .)
+    target_compile_definitions(external-p256-m PRIVATE EXTERNAL_P256_M)
+endif()

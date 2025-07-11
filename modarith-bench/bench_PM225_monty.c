@@ -1,0 +1,81 @@
+
+#include <inttypes.h>
+#include "hal.h"
+               
+#include "code_PM225_monty.c"
+               
+#if defined(__clang__)
+#define DoNotOptimize(value) asm volatile("" : "+r,m"(value) : : "memory");
+#else
+#define DoNotOptimize(value) asm volatile("" : "+m,r"(value) : : "memory");
+#endif
+
+void bench_modarith_modmul_PM225_monty() {
+    spint a[Nlimbs_PM225_ct], b[Nlimbs_PM225_ct], c[2 * Nlimbs_PM225_ct];
+    bm_decls;
+
+    bm_start();
+    DoNotOptimize(a);
+    DoNotOptimize(b);
+    modmul_PM225_ct(a, b, c);
+    DoNotOptimize(c);
+    bm_end();
+
+    printf("PM225, monty, modarith, modmul, cycles, %" PRIu32 "\n", bm_result());
+    usleep(1000); // To avoid SWO buffer overflows
+}
+
+void bench_modarith_modsqr_PM225_monty() {
+    spint a[Nlimbs_PM225_ct], c[2 * Nlimbs_PM225_ct];
+    bm_decls;
+
+    bm_start();
+    DoNotOptimize(a);
+    modsqr_PM225_ct(a, c);
+    DoNotOptimize(c);
+    bm_end();
+
+    printf("PM225, monty, modarith, modsqr, cycles, %" PRIu32 "\n", bm_result());
+    usleep(1000); // To avoid SWO buffer overflows
+}
+
+void bench_modarith_modadd_PM225_monty() {
+    spint a[Nlimbs_PM225_ct], b[Nlimbs_PM225_ct], c[Nlimbs_PM225_ct];
+    bm_decls;
+
+    bm_start();
+    DoNotOptimize(a);
+    DoNotOptimize(b);
+    modadd_PM225_ct(a, b, c);
+    DoNotOptimize(c);
+    bm_end();
+
+    printf("PM225, monty, modarith, modadd, cycles, %" PRIu32 "\n", bm_result());
+    usleep(1000); // To avoid SWO buffer overflows
+}
+
+void bench_modarith_modsub_PM225_monty() {
+    spint a[Nlimbs_PM225_ct], b[Nlimbs_PM225_ct], c[Nlimbs_PM225_ct];
+    bm_decls;
+
+    bm_start();
+    DoNotOptimize(a);
+    DoNotOptimize(b);
+    modsub_PM225_ct(a, b, c);
+    DoNotOptimize(c);
+    bm_end();
+
+    printf("PM225, monty, modarith, modsub, cycles, %" PRIu32 "\n", bm_result());
+    usleep(1000); // To avoid SWO buffer overflows
+}
+
+
+
+void bench_modarith_PM225_monty() {
+    bench_modarith_modmul_PM225_monty();
+    bench_modarith_modsqr_PM225_monty();
+    bench_modarith_modadd_PM225_monty();
+    bench_modarith_modsub_PM225_monty();
+    
+    printf("\n");
+}

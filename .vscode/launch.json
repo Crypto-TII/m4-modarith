@@ -1,0 +1,143 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (OpenOCD, remote, DISCOVERY)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "external",
+            "gdbTarget": "127.0.0.1:50000",
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "device": "STM32F407VG",
+            "runToEntryPoint": "main",
+            "svdFile": "STM32F407.svd",
+            "preLaunchTask": "SWO parser",
+            "postDebugTask": "Stop OpenOCD",
+            "postLaunchCommands": [
+                "monitor stm32f4x.tpiu configure -protocol uart -output :50003 -traceclk 24000000 -pin-freq 2000000",
+                "monitor stm32f4x.tpiu enable"
+            ],
+            // "swoConfig": {
+            //     "enabled": true,
+            //     "source": "socket",
+            //     "swoPort": "127.0.0.1:50003",
+            //     "swoFrequency": 2000000,
+            //     "cpuFrequency": 24000000,
+            //     "decoders": [
+            //         {
+            //             "port": 0,
+            //             "type": "console",
+            //             "label": "SWO output",
+            //             "encoding": "ascii",
+            //             "showOnStartup": true
+            //         }
+            //     ]
+            // }
+        },
+        {
+            "name": "Debug (OpenOCD, remote, L4R5ZI)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "external",
+            "gdbTarget": "127.0.0.1:50000",
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "device": "STM32L4R5ZI",
+            "runToEntryPoint": "main",
+            "svdFile": "STM32L4x5.svd",
+            "preLaunchTask": "SWO parser",
+            "postDebugTask": "Stop OpenOCD",
+            "postLaunchCommands": [
+                "monitor stm32l4x.tpiu configure -protocol uart -output :50003 -traceclk 20000000 -pin-freq 2000000",
+                "monitor stm32l4x.tpiu enable"
+            ],
+        },
+        {
+            "name": "Debug (OpenOCD, local, DISCOVERY)",
+            "type": "cortex-debug",
+            "request": "launch",
+            // "servertype": "stlink", // Do not use in ARM64/Linux hosts -- ST-Link gdb server not available
+            // "servertype": "stutil", // OpenOCD seems to be a little faster
+            "servertype": "openocd",
+            "configFiles": [
+                "board/stm32f4discovery.cfg",
+            ],
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "device": "STM32F407VG",
+            "serialNumber": "<serial_number>",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "svdFile": "STM32F407.svd",
+            "swoConfig": {
+                "enabled": true,
+                "source": "probe",
+                "swoFrequency": 2000000,
+                "cpuFrequency": 24000000,
+                "decoders": [
+                    {
+                        "port": 0,
+                        "type": "console",
+                        "label": "SWO output",
+                        "encoding": "ascii",
+                        "showOnStartup": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Debug (OpenOCD, local, L4R5ZI)",
+            "type": "cortex-debug",
+            "request": "launch",
+            // "servertype": "stlink", // Do not use in ARM64/Linux hosts -- ST-Link gdb server not available
+            // "servertype": "stutil", // OpenOCD seems to be a little faster
+            "servertype": "openocd",
+            "configFiles": [
+                "board/st_nucleo_l4r5zi.cfg",
+            ],
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "device": "STM32L4R5ZI",
+            "serialNumber": "<serial_number>",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "svdFile": "STM32FL4x5.svd",
+            "swoConfig": {
+                "enabled": true,
+                "source": "probe",
+                "swoFrequency": 2000000,
+                "cpuFrequency": 20000000,
+                "decoders": [
+                    {
+                        "port": 0,
+                        "type": "console",
+                        "label": "SWO output",
+                        "encoding": "ascii",
+                        "showOnStartup": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Debug (QEMU)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "qemu",
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "machine": "olimex-stm32-h405",
+            "cpu": "cortex-m4",
+            "serverArgs": [
+                "-serial",
+                "null",
+                "-serial",
+                "stdio",
+                "-monitor",
+                "null"
+            ]
+        }
+    ]
+}

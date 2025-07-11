@@ -1,0 +1,6 @@
+if(USE_EXTERNAL_MSRECC)
+    add_library(external-msrecc STATIC bench_msrecc.c fp.c)
+    target_include_directories(external-msrecc PRIVATE .)
+    target_compile_definitions(external-msrecc PRIVATE EXTERNAL_MSRECC)
+    target_link_libraries(external-msrecc PRIVATE unity)
+endif()

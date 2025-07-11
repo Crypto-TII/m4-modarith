@@ -1,0 +1,6 @@
+if(USE_EXTERNAL_HAASE)
+    add_library(external-haase STATIC bench_c25519.c asm/cortex_m4_mpy_fe25519.S asm/cortex_m4_sqr_fe25519.S)
+    target_include_directories(external-haase PRIVATE ./include)
+    target_compile_definitions(external-haase PRIVATE EXTERNAL_HAASE)
+    target_link_libraries(external-haase PRIVATE unity)
+endif()
